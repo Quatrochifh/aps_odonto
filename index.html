@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FmuOdonto - Cronograma</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+
+<body>
+    <div id="quiz-container">
+        <h1>Teste seus conhecimentos sobre Saúde Bucal</h1>
+        <div id="question-container">
+            <p id="question"></p>
+            <ul id="options">
+            </ul>
+            <button id="submit-button" onclick="checkAnswer(currentQuestion)">Enviar</button>
+        </div>
+        <p id="result"></p>
+        <img id="acerto-img" src="assets/blog-sc3admbolo-copy.jpg" style="display: none;">
+        <img id="erro-img" src="assets/faustao-mostrou-que-nem-sempre-quem-sabe-faz-ao-vivo-1515582826765_300x200.jpg" style="display: none;">
+    </div>
+
+    <script>
+        var questions = [
+            {
+                question: "Qual é a principal causa de cáries dentárias?",
+                options: ["Má higiene bucal", "Café", "Refrigerante"],
+                answer: 0
+            },
+            {
+                question: "O que é placa bacteriana?",
+                options: ["Uma bactéria", "Uma camada de açúcar", "Uma camada de bactérias"],
+                answer: 2
+            }
+            // Adicione mais perguntas aqui
+        ];
+
+        var currentQuestion = 0;
+
+        function loadQuestion(questionNumber) {
+            var questionData = questions[questionNumber];
+            if (questionData) {
+                document.getElementById("question").textContent = "Pergunta " + (questionNumber + 1) + ": " + questionData.question;
+                var optionsList = document.getElementById("options");
+                optionsList.innerHTML = "";
+                questionData.options.forEach(function (option, index) {
+                    var li = document.createElement("li");
+                    var input = document.createElement("input");
+                    input.type = "radio";
+                    input.name = "answer";
+                    input.value = index;
+                    li.appendChild(input);
+                    li.appendChild(document.createTextNode(option));
+                    optionsList.appendChild(li);
+                });
+                document.getElementById("result").textContent = "";
+            } else {
+                document.getElementById("question-container").innerHTML = "<p>Fim do quiz! Recarregue a página para jogar novamente!</p>";
+            }
+        }
+
+        function checkAnswer(questionNumber) {
+            var selectedOption = document.querySelector('input[name="answer"]:checked');
+            if (selectedOption) {
+                var answer = selectedOption.value;
+                if (answer == questions[questionNumber].answer) {
+                    document.getElementById("result").textContent = "Resposta correta!";
+                    document.getElementById("acerto-img").style.display = "block";
+                    document.getElementById("erro-img").style.display = "none";
+                    setTimeout(function () {
+                        document.getElementById("acerto-img").style.display = "none";
+                        document.getElementById("result").textContent = "";
+                        selectedOption.checked = false;
+                        currentQuestion++;
+                        loadQuestion(currentQuestion);
+                    }, 2000);
+                } else {
+                    document.getElementById("result").textContent = "Resposta incorreta. A resposta correta é '" + questions[questionNumber].options[questions[questionNumber].answer] + "'.";
+                    document.getElementById("erro-img").style.display = "block";
+                }
+            } else {
+                document.getElementById("result").textContent = "Por favor, selecione uma resposta.";
+            }
+        }
+
+        loadQuestion(currentQuestion);
+    </script>
+</body>
+
+</html>
